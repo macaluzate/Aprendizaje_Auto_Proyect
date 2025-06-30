@@ -134,9 +134,10 @@ def categorizacion(df, col_name):
 	etiquetas = ['Muy bajo', 'Bajo', 'Medio', 'Alto'][:num_bins]
 
 	df[f'{col_name}_riesgo'] = pd.qcut(df[f'{col_name}_TE'], q=4, labels=etiquetas, duplicates='drop')
-	df[f'{col_name}_TE'].drop()
-	df[col_name].drop()
-	df[f'{col_name}_grouped'].drop()
+	
+	df = df.drop(f'{col_name}_TE', axis=1)
+	df = df.drop(col_name, axis=1)
+	df = df.drop(f'{col_name}_grouped', axis=1)
 
 
 # Función para llenar los valores nulos de una lista de columnas con -1
