@@ -193,3 +193,72 @@ def agrupar_canal(canal):
     else:
         return 'Volume'
 
+
+def limpiar_smartscreen(df):
+    """
+    Limpia y estandariza la columna SmartScreen
+    Args:
+        df (pd.DataFrame): DataFrame original
+    Returns:
+        pd.DataFrame: DataFrame con SmartScreen limpiado
+    """
+    print("Limpiando columna SmartScreen...")
+    if 'SmartScreen' in df.columns:
+        # Convertir a minúsculas para estandarizar
+        df['SmartScreen'] = df['SmartScreen'].str.lower()
+
+        # Reemplazar valores inconsistentes
+        df['SmartScreen'] = df['SmartScreen'].replace({
+            'enabled': 'on',
+            'requireadmin': 'requireadmin',
+            'promt': 'prompt',
+            'promprt': 'prompt',
+            'prompt ': 'prompt',  # prompt con espacio
+            '0': 'off',
+            '00000000': 'off'
+        })
+
+        # Rellenar valores nulos
+        df['SmartScreen'] = df['SmartScreen'].fillna('NaNNN')
+
+    
+def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_categoria='Others'):
+    
+    frecuencias = df[columna].value_counts(normalize=True)
+    categorias_poco_frecuentes = frecuencias[frecuencias < umbral].index
+    return df[columna].apply(lambda x: nombre_categoria if x in categorias_poco_frecuentes else x)
+df['SmartScreen'] = agrupar_valores_poco_representativos(df, 'SmartScreen', umbral=0.02)
+
+def llenar_nulos_con_texto(df, columnas, texto="UNKNOWN"):
+    
+    print(f"Rellenando nulos en {columnas} con texto: {texto}")
+    for col in columnas:
+        if col in df.columns:
+            df[col] = df[col].fillna(texto)
+  
+
+def limpiar_power_platform(df):
+    """
+    Limpia y estandariza la columna Census_PowerPlatformRoleName
+    Args:
+        df (pd.DataFrame): DataFrame original
+    Returns:
+        pd.DataFrame: DataFrame con Census_PowerPlatformRoleName limpiado
+    """
+    print("Limpiando columna Census_PowerPlatformRoleName...")
+    col = 'Census_PowerPlatformRoleName'
+    if col in df.columns:
+        df[col] = df[col].replace('NaN', 'UNKNOWN').fillna('UNKNOWN')
+
+
+  print("Limpiando columna Census_ChassisTypeName...")
+    col = 'Census_ChassisTypeName'
+    if col in df.columns:
+        # Reemplazar variaciones de unknown
+        df[col] = df[col].fillna('UNKNOWN')
+
+        # Agrupar valores menos comunes en 'Other'
+        valores_permitidos = ['Notebook', 'Desktop', 'Laptop', 'UNKNOWN','nan', 'Unknown']
+        df[col] = df[col].apply(
+            lambda x: x if x in valores_permitidos else 'Other'
+        )
