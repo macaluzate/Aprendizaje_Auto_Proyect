@@ -15,7 +15,6 @@ from sklearn.model_selection import train_test_split
 # ----------------- Función principal para obtener el DataFrame procesado -----------------
 
 
-
 # Función para descargar el dataset de Kaggle y descomprimirlo en directorio de trabajo
 def download_dataset():
     load_dotenv()
@@ -77,20 +76,20 @@ def read_malware_csv(file_path = 'train.csv', dtypes_dict=None, columns=None):
 # Función de codificación tipo one-hot encoding utilizando 0/1.
 def dummy_encode(df, column):
     """
-    Codifica una columna categórica en variables dummy utilizando codificación 0/1.
+    Encodes a categorical column into dummy variables using 0/1 encoding.
 
     Args:
-        df: El DataFrame de entrada.
-        column: El nombre de la columna a codificar.
-    
-    Returns:
-        Un DataFrame con las variables dummy.
-    """
+        df: The input DataFrame.
+        column: The name of the column to encode.
 
-    # El drop_first=True elimina la primera categoría para evitar la multicolinealidad.
-    dummies = pd.get_dummies(df[column], prefix=column, prefix_sep='_', drop_first=True)
-    dummies = dummies.map(lambda x: 1 if x == 1 else 0)*1
-    return pd.concat([dummies, df.drop(column, axis=1)], axis=1)
+    Returns:
+        A DataFrame with the dummy variables.
+    """
+    
+    # Usar dtype=int para forzar 0/1 desde el inicio
+    dummies = pd.get_dummies(df[column], prefix=column, prefix_sep='_', drop_first=True, dtype=int)
+    
+    return pd.concat([df.drop(column, axis=1), dummies], axis=1)
 
 
 # Función para codificar por nulo y renombrar la columna agregando '_Missing'
@@ -145,9 +144,6 @@ def llenarNulos(df, cols):
 	for col in cols:
 		df[col] = df[col].fillna(-1)
 		
-
-
-
 
 
 # ------------------------ Bloque de funciones de agrupación de categorías ------------------------
@@ -252,7 +248,7 @@ def limpiar_power_platform(df):
         df[col] = df[col].replace('NaN', 'UNKNOWN').fillna('UNKNOWN')
 
 
-  print("Limpiando columna Census_ChassisTypeName...")
+    print("Limpiando columna Census_ChassisTypeName...")
     col = 'Census_ChassisTypeName'
     if col in df.columns:
         # Reemplazar variaciones de unknown
