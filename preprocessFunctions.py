@@ -228,7 +228,6 @@ def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_catego
     frecuencias = df[columna].value_counts(normalize=True)
     categorias_poco_frecuentes = frecuencias[frecuencias < umbral].index
     return df[columna].apply(lambda x: nombre_categoria if x in categorias_poco_frecuentes else x)
-df['SmartScreen'] = agrupar_valores_poco_representativos(df, 'SmartScreen', umbral=0.02)
 
 def llenar_nulos_con_texto(df, columnas, texto="UNKNOWN"):
     
