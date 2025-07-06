@@ -118,6 +118,7 @@ def categorizar(df, columnas):
 		categorizacion(df, col)
 
 # Función para categorizar una columna
+'''
 def categorizacion(df, col_name):
 	top_versions = df[col_name].value_counts().nlargest(10).index
 	df[f'{col_name}_grouped'] = df[col_name].apply(lambda x: x if x in top_versions else 'Other')
@@ -137,7 +138,30 @@ def categorizacion(df, col_name):
 	df = df.drop(f'{col_name}_TE', axis=1)
 	df = df.drop(col_name, axis=1)
 	df = df.drop(f'{col_name}_grouped', axis=1)
+'''
 
+def categorizacion(col_name):
+    
+    no_nulos = df[df[col_name].notna()]
+    top_versions = no_nulos[col_name].value_counts().nlargest(10).index
+    df[f'{col_name}_grouped'] = df[col_name].apply(
+        lambda x: x if pd.notna(x) and x in top_versions else ('Other' if pd.notna(x) else np.nan)
+    )
+    tasa_deteccion = df[df[f'{col_name}_grouped'].notna()].groupby(f'{col_name}_grouped')['HasDetections'].mean()
+    df[f'{col_name}_TE'] = df[f'{col_name}_grouped'].map(tasa_deteccion)
+    mask_validos = df[f'{col_name}_TE'].notna()
+    bins = pd.qcut(df.loc[mask_validos, f'{col_name}_TE'], q=4, duplicates='drop')
+    num_bins = bins.cat.categories.size
+    etiquetas = ['Muy bajo', 'Bajo', 'Medio', 'Alto'][:num_bins]
+    df.loc[mask_validos, f'{col_name}_riesgo'] = pd.qcut(
+        df.loc[mask_validos, f'{col_name}_TE'],
+        q=4,
+        labels=etiquetas,
+        duplicates='drop'
+    )
+    df.drop([f'{col_name}_TE', f'{col_name}_grouped'], axis=1, inplace=True)
+    if col_name in df.columns:
+        df.drop(columns=[col_name], inplace=True)
 
 # Función para llenar los valores nulos de una lista de columnas con -1
 def llenarNulos(df, cols):
