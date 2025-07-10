@@ -247,6 +247,8 @@ def limpiar_power_platform(df):
         df[col] = df[col].replace('NaN', 'UNKNOWN').fillna('UNKNOWN')
 
 
+
+def limpiar_chassis_type(df):    
     print("Limpiando columna Census_ChassisTypeName...")
     col = 'Census_ChassisTypeName'
     if col in df.columns:
