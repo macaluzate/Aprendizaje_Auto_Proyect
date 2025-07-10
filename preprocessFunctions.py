@@ -18,8 +18,8 @@ from sklearn.model_selection import train_test_split
 # Función para descargar el dataset de Kaggle y descomprimirlo en directorio de trabajo
 def download_dataset():
     load_dotenv()
-    os.environ["KAGGLE_USERNAME"] = os.getenv("KAGGLE_USERNAME")
-    os.environ["KAGGLE_KEY"] = os.getenv("KAGGLE_KEY")
+    os.environ["KAGGLE_USERNAME"] = str(os.getenv("KAGGLE_USERNAME"))
+    os.environ["KAGGLE_KEY"] = str(os.getenv("KAGGLE_KEY"))
 
     from kaggle.api.kaggle_api_extended import KaggleApi
 
@@ -118,6 +118,7 @@ def categorizar(df, columnas):
 		categorizacion(df, col)
 
 # Función para categorizar una columna
+'''
 def categorizacion(df, col_name):
 	top_versions = df[col_name].value_counts().nlargest(10).index
 	df[f'{col_name}_grouped'] = df[col_name].apply(lambda x: x if x in top_versions else 'Other')
@@ -137,7 +138,30 @@ def categorizacion(df, col_name):
 	df = df.drop(f'{col_name}_TE', axis=1)
 	df = df.drop(col_name, axis=1)
 	df = df.drop(f'{col_name}_grouped', axis=1)
+'''
 
+def categorizacion(df, col_name):
+    
+    no_nulos = df[df[col_name].notna()]
+    top_versions = no_nulos[col_name].value_counts().nlargest(10).index
+    df[f'{col_name}_grouped'] = df[col_name].apply(
+        lambda x: x if pd.notna(x) and x in top_versions else ('Other' if pd.notna(x) else np.nan)
+    )
+    tasa_deteccion = df[df[f'{col_name}_grouped'].notna()].groupby(f'{col_name}_grouped')['HasDetections'].mean()
+    df[f'{col_name}_TE'] = df[f'{col_name}_grouped'].map(tasa_deteccion)
+    mask_validos = df[f'{col_name}_TE'].notna()
+    bins = pd.qcut(df.loc[mask_validos, f'{col_name}_TE'], q=4, duplicates='drop')
+    num_bins = bins.cat.categories.size
+    etiquetas = ['Muy bajo', 'Bajo', 'Medio', 'Alto'][:num_bins]
+    df.loc[mask_validos, f'{col_name}_riesgo'] = pd.qcut(
+        df.loc[mask_validos, f'{col_name}_TE'],
+        q=4,
+        labels=etiquetas,
+        duplicates='drop'
+    )
+    df.drop([f'{col_name}_TE', f'{col_name}_grouped'], axis=1, inplace=True)
+    if col_name in df.columns:
+        df.drop(columns=[col_name], inplace=True)
 
 # Función para llenar los valores nulos de una lista de columnas con -1
 def llenarNulos(df, cols):
@@ -216,7 +240,7 @@ def limpiar_smartscreen(df):
         })
 
         # Rellenar valores nulos
-        df['SmartScreen'] = df['SmartScreen'].fillna('NaNNN')
+        df['SmartScreen'] = df['SmartScreen'].fillna('NaN')
 
     
 def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_categoria='Others'):
@@ -224,13 +248,6 @@ def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_catego
     frecuencias = df[columna].value_counts(normalize=True)
     categorias_poco_frecuentes = frecuencias[frecuencias < umbral].index
     return df[columna].apply(lambda x: nombre_categoria if x in categorias_poco_frecuentes else x)
-
-def llenar_nulos_con_texto(df, columnas, texto="UNKNOWN"):
-    
-    print(f"Rellenando nulos en {columnas} con texto: {texto}")
-    for col in columnas:
-        if col in df.columns:
-            df[col] = df[col].fillna(texto)
   
 
 def limpiar_power_platform(df):
