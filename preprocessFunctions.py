@@ -18,8 +18,8 @@ from sklearn.model_selection import train_test_split
 # Función para descargar el dataset de Kaggle y descomprimirlo en directorio de trabajo
 def download_dataset():
     load_dotenv()
-    os.environ["KAGGLE_USERNAME"] = os.getenv("KAGGLE_USERNAME")
-    os.environ["KAGGLE_KEY"] = os.getenv("KAGGLE_KEY")
+    os.environ["KAGGLE_USERNAME"] = str(os.getenv("KAGGLE_USERNAME"))
+    os.environ["KAGGLE_KEY"] = str(os.getenv("KAGGLE_KEY"))
 
     from kaggle.api.kaggle_api_extended import KaggleApi
 
@@ -140,7 +140,7 @@ def categorizacion(df, col_name):
 	df = df.drop(f'{col_name}_grouped', axis=1)
 '''
 
-def categorizacion(col_name):
+def categorizacion(df, col_name):
     
     no_nulos = df[df[col_name].notna()]
     top_versions = no_nulos[col_name].value_counts().nlargest(10).index
@@ -240,7 +240,7 @@ def limpiar_smartscreen(df):
         })
 
         # Rellenar valores nulos
-        df['SmartScreen'] = df['SmartScreen'].fillna('NaNNN')
+        df['SmartScreen'] = df['SmartScreen'].fillna('NaN')
 
     
 def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_categoria='Others'):
@@ -248,13 +248,6 @@ def agrupar_valores_poco_representativos(df, columna, umbral=0.02, nombre_catego
     frecuencias = df[columna].value_counts(normalize=True)
     categorias_poco_frecuentes = frecuencias[frecuencias < umbral].index
     return df[columna].apply(lambda x: nombre_categoria if x in categorias_poco_frecuentes else x)
-
-def llenar_nulos_con_texto(df, columnas, texto="UNKNOWN"):
-    
-    print(f"Rellenando nulos en {columnas} con texto: {texto}")
-    for col in columnas:
-        if col in df.columns:
-            df[col] = df[col].fillna(texto)
   
 
 def limpiar_power_platform(df):
