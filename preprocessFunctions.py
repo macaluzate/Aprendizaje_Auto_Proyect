@@ -73,25 +73,6 @@ def read_malware_csv(file_path = 'train.csv', dtypes_dict=None, columns=None):
     return df
 
 
-# Función de codificación tipo one-hot encoding utilizando 0/1.
-def dummy_encode(df, column):
-    """
-    Encodes a categorical column into dummy variables using 0/1 encoding.
-
-    Args:
-        df: The input DataFrame.
-        column: The name of the column to encode.
-
-    Returns:
-        A DataFrame with the dummy variables.
-    """
-    
-    # Usar dtype=int para forzar 0/1 desde el inicio
-    dummies = pd.get_dummies(df[column], prefix=column, prefix_sep='_', drop_first=True, dtype=int)
-    
-    return pd.concat([df.drop(column, axis=1), dummies], axis=1)
-
-
 # Función para codificar por nulo y renombrar la columna agregando '_Missing'
 def codificar_por_nulo(df, column):
     """
