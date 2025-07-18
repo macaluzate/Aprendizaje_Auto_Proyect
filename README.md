@@ -74,5 +74,5 @@ Si elige descargar el archivo, puede omitir en el `main.py` la línea de código
 ## 📓 Notebooks Experimentales
 
 En esta sección puedes incluir o enlazar notebooks donde hayas probado técnicas adicionales o exploraciones fuera del flujo principal.
-
+(TEMP)
 ---
