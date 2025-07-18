@@ -35,7 +35,7 @@ source .venv/bin/activate
 Una vez activado, instala las dependencias necesarias:
 
 ```bash
-pip install --upgrade pip
+pip install pip==24.1.2
 pip install -r requirements.txt
 ```
 
