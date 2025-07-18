@@ -2,6 +2,8 @@
 
 ---
 
+⚠️ Cuidado: El dataset manejado en este proyecto es bastante grande, de aproximadamente 83 columnas y casi 9 millones de filas (registros), por lo cual no se recomienda intentar correrlo localmente, a excepción de que se posea con una máquina con recursos de hardware equiparables a las máquinas de Colab Pro.
+
 ## 🚀 Replicación del Proyecto
 
 ### 📥 Clonar el Repositorio
@@ -44,15 +46,18 @@ pip install -r requirements.txt
 Este proyecto descarga los datos directamente desde Kaggle, por lo que es necesario configurar tus credenciales de la API:
 
 1. Inicia sesión en tu cuenta de [Kaggle](https://www.kaggle.com/).
-2. Inscríbete en la competencia [Microsoft Malware Prediction](https://www.kaggle.com/competitions/microsoft-malware-prediction).
+2. Inscríbete en la competencia [Microsoft Malware Prediction](https://www.kaggle.com/competitions/microsoft-malware-prediction), para esto te diriges a la seccion `Data` de la competencia, y al final de todo está el boton `Join the competition`
 3. Ve a tu perfil → [*Settings*](https://www.kaggle.com/settings).
 4. En la sección **API**, genera un nuevo token (botón *Create New Token*).
-5. Se descargará un archivo `kaggle.json`. Toma los valores de `"username"` y `"key"` para crear un archivo `.env` en el directorio raíz del proyecto:
+5. Toma los valores de `"username"` y `"key"` (ya sea los generados en la página o del JSON descargado automáticamente) para crear un archivo `.env` en el directorio raíz del proyecto:
 
 ```env
-KAGGLE_USERNAME=miquinterog...
-KAGGLE_KEY=70ba...
+KAGGLE_USERNAME = "miquinterog..."
+KAGGLE_KEY = "70ba..."
 ```
+
+**NOTA:** En caso de tener dificultades, puede elegir descargar manualmente el archivo .zip de la competencia, descomprimir y quedarse con el archivo `train.csv` (archivo usado para el proyecto ya que el de test es exlusivo de la competencia y no cuenta con las etiquetas).
+Si elige descargar el archivo, puede omitir en el `main.py` la línea de código de la función `download_dataset()`, aunque esta ya tiene un chequeo condicional para esto.
 
 ---
 
@@ -71,5 +76,3 @@ KAGGLE_KEY=70ba...
 En esta sección puedes incluir o enlazar notebooks donde hayas probado técnicas adicionales o exploraciones fuera del flujo principal.
 
 ---
-
-¿Quieres que también te ayude a escribir una breve introducción general del proyecto (problema, objetivo, datos)?
