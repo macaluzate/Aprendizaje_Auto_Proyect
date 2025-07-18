@@ -1,32 +1,75 @@
-# Readme
+# 🛡️ Proyecto Malware Prediction
 
-# Proyecto Malware Prediction
+---
 
-## Replicación de este Proyecto
+## 🚀 Replicación del Proyecto
 
-### Ambiente
+### 📥 Clonar el Repositorio
 
-- Python 3.11
-- Instalar las librerías necesarias según el archivo `requirements.txt`
+Haz clic en el botón `< > Code`, copia la URL HTTPS del repositorio y ejecuta:
+
 ```bash
+git clone <URL-del-repositorio>
+cd <nombre-del-repo>
+```
+
+---
+
+### 🐍 Crear y Activar Entorno Virtual
+
+Este proyecto utiliza **Python 3.11**. Asegúrate de tenerlo instalado antes de continuar.
+
+```bash
+python3.11 -m venv .venv
+
+# Activar entorno virtual:
+# En macOS / Linux:
+source .venv/bin/activate
+
+# En Windows:
+.\.venv\Scripts\activate
+```
+
+Una vez activado, instala las dependencias necesarias:
+
+```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### Preparar variables de entorono
-Las únicas variables de entorno necesarias para este proyecto son credenciales de la API de Kaggle para poder descargar programáticamente el archivo.
+---
 
-1. Inicie sesión en su cuenta de [Kaggle](https://www.kaggle.com/)
-2. Inscribase a la competencia de [Microsoft Malware](https://www.kaggle.com/competitions/microsoft-malware-prediction)
-3. Dirigase a la sección de [*Settings*](https://www.kaggle.com/settings) de su perfil de Kaggle
-4. En la subseccción de API genere un nuevo token de acceso (Create New Token).
-5. Cree un archivo `.env`en el mismo directorio base del proyecto, con sus credenciales así:
-```bash
-KAGGLE_USERNAME = "miquinterog..."
-KAGGLE_KEY = "70ba..."
+### 🔐 Configurar Variables de Entorno (API de Kaggle)
+
+Este proyecto descarga los datos directamente desde Kaggle, por lo que es necesario configurar tus credenciales de la API:
+
+1. Inicia sesión en tu cuenta de [Kaggle](https://www.kaggle.com/).
+2. Inscríbete en la competencia [Microsoft Malware Prediction](https://www.kaggle.com/competitions/microsoft-malware-prediction).
+3. Ve a tu perfil → [*Settings*](https://www.kaggle.com/settings).
+4. En la sección **API**, genera un nuevo token (botón *Create New Token*).
+5. Se descargará un archivo `kaggle.json`. Toma los valores de `"username"` y `"key"` para crear un archivo `.env` en el directorio raíz del proyecto:
+
+```env
+KAGGLE_USERNAME=miquinterog...
+KAGGLE_KEY=70ba...
 ```
 
-### Descripción de Archivos
+---
 
-- **preprocessLibrary.py**: Contiene funciones para sintetizar el procesamiento y hacer todo de una manera más modular y sobrecargando menos el archivo principal
+### 📁 Estructura y Archivos del Proyecto
 
-- **main.py**: Script principal, que abarca desde la descarga de los datos, preprocesamiento, división en *train* y *test*, hasta el entrenamiento del modelo y su validación en split de test.
+| Archivo                | Descripción                                                                                                                               |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `dtypes_dict.json`     | Diccionario de tipos de datos generado tras leer el dataset completo con `low_memory=False`. Permite lecturas más rápidas posteriormente. |
+| `preprocessLibrary.py` | Módulo con funciones para procesamiento modular y reutilizable de los datos.                                                              |
+| `main.py`              | Script principal que incluye descarga de datos, preprocesamiento, división de conjuntos, entrenamiento y validación del modelo.           |
+
+---
+
+## 📓 Notebooks Experimentales
+
+En esta sección puedes incluir o enlazar notebooks donde hayas probado técnicas adicionales o exploraciones fuera del flujo principal.
+
+---
+
+¿Quieres que también te ayude a escribir una breve introducción general del proyecto (problema, objetivo, datos)?
