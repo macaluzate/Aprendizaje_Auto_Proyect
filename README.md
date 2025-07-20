@@ -73,6 +73,6 @@ Si elige descargar el archivo, puede omitir en el `main.py` la línea de código
 
 ## 📓 Notebooks Experimentales
 
-En esta sección puedes incluir o enlazar notebooks donde hayas probado técnicas adicionales o exploraciones fuera del flujo principal.
-(TEMP)
+- [Entrenamiento de Logistic Regression, Random Forest y LightGBM](https://colab.research.google.com/drive/1A_TzP07LUeR0PZYHoTH_DV0RnAPSjxTk?usp=sharing)
+- [Ejecución con el modelo final y gráfica de métricas](https://colab.research.google.com/drive/1jhhYb3-_4Tm69yi8syuFXEe6G_D5MByH?usp=sharing)
 ---
